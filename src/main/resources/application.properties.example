@@ -35,3 +35,7 @@ payment.sepay.api-key=${SEPAY_API_KEY}
 
 # Google OAuth2 Login
 google.client-id=${GOOGLE_CLIENT_ID}
+
+# Gemini: đọc hóa đơn admin quét bằng máy ảnh. Thiếu khóa thì đọc dòng GEMINI_API_KEY trong bảng app_config.
+gemini.api-key=${GEMINI_API_KEY:}
+gemini.model=${GEMINI_MODEL:gemini-flash-latest}

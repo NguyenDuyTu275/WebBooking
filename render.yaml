@@ -33,6 +33,9 @@ services:
         sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
+      # Khoa API Gemini de doc hoa don admin quet bang may anh
+      - key: GEMINI_API_KEY
+        sync: false
       - key: PAYMENT_BANK_ACCOUNT_NUMBER
         sync: false
       - key: PAYMENT_BANK_ACCOUNT_NAME

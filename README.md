@@ -39,6 +39,8 @@
    | `SPRING_MAIL_USERNAME`, `SPRING_MAIL_PASSWORD` | Gmail SMTP (app password) để gửi OTP |
    | `SEPAY_API_KEY` | **Bắt buộc.** Webhook Sepay từ chối mọi request khi biến này trống |
    | `GOOGLE_CLIENT_ID` | Đăng nhập Google |
+   | `GEMINI_API_KEY` | Khóa API Gemini để admin quét hóa đơn (`POST /admin/receipts/scan`). Trống thì đọc dòng `GEMINI_API_KEY` trong bảng `app_config` |
+   | `GEMINI_MODEL` | Model Gemini đọc hóa đơn, mặc định `gemini-flash-latest` |
    | `PAYMENT_BANK_ACCOUNT_NUMBER`, `PAYMENT_BANK_ACCOUNT_NAME` | Tài khoản nhận tiền trên mã VietQR |
    | `SUPABASE_URL`, `SUPABASE_KEY` | Lưu ảnh upload lên Supabase Storage (`SUPABASE_KEY` là **service_role** key). Thiếu một trong hai thì ảnh lưu vào `./uploads` và **mất khi deploy lại** |
    | `SUPABASE_STORAGE_BUCKET` | Tên bucket, mặc định `uploads`. Bucket phải để **Public** |

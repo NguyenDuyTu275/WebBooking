@@ -1,5 +1,6 @@
 package com.Nhom2.booking.config;
 
+import com.Nhom2.booking.controller.AdminReceiptController;
 import com.Nhom2.booking.controller.AdminReviewController;
 import com.Nhom2.booking.controller.AdminSupportChatController;
 import com.Nhom2.booking.controller.SupportChatController;
@@ -18,6 +19,7 @@ import com.Nhom2.booking.repository.HotelRepository;
 import com.Nhom2.booking.repository.RoomRepository;
 import com.Nhom2.booking.security.JwtUtil;
 import com.Nhom2.booking.service.ImageStorageService;
+import com.Nhom2.booking.service.ReceiptService;
 import com.Nhom2.booking.service.ReviewService;
 import com.Nhom2.booking.service.SupportChatService;
 import com.Nhom2.booking.service.RoomService;
@@ -43,6 +45,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {
+        AdminReceiptController.class,
         AdminReviewController.class,
         AdminSupportChatController.class,
         SupportChatController.class,
@@ -90,6 +93,9 @@ class SecurityRulesTest {
 
     @MockitoBean
     private RoomRepository roomRepository;
+
+    @MockitoBean
+    private ReceiptService receiptService;
 
     @Test
     void debugEndpointThatLeakedPasswordHashesNoLongerExists() throws Exception {
@@ -256,5 +262,35 @@ class SecurityRulesTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"new@example.com\"}"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void receiptScanningRequiresAuthentication() throws Exception {
+        mockMvc.perform(get("/admin/receipts/daily"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void regularUserCannotScanReceiptsOrReadRevenue() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "receipt.jpg", "image/jpeg", new byte[]{1});
+
+        mockMvc.perform(multipart("/admin/receipts/scan").file(file))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(get("/admin/receipts/daily"))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(post("/admin/receipts").contentType(MediaType.APPLICATION_JSON).content("{\"amount\":100}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void adminCanScanReceiptsAndReadDailyRevenue() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "receipt.jpg", "image/jpeg", new byte[]{1});
+
+        mockMvc.perform(multipart("/admin/receipts/scan").file(file))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/admin/receipts/daily").param("date", "2026-10-23"))
+                .andExpect(status().isOk());
     }
 }
