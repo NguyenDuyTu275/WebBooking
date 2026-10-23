@@ -68,10 +68,20 @@ const AdminSupportChat: React.FC = () => {
     });
   }, [loadRooms]);
 
+  // Messages pushed while the socket was down never arrive: reload the list and the open conversation.
+  const handleReconnect = useCallback(() => {
+    loadRooms();
+    const roomId = selectedRef.current;
+    if (roomId === null) return;
+    adminSupportChatApi.messages(roomId)
+      .then(list => { if (selectedRef.current === roomId) setMessages(list); })
+      .catch(err => console.error('Failed to reload chat messages', err));
+  }, [loadRooms]);
+
   useEffect(() => {
     loadRooms();
-    return connectSupportChat(handleIncoming);
-  }, [loadRooms, handleIncoming]);
+    return connectSupportChat(handleIncoming, handleReconnect);
+  }, [loadRooms, handleIncoming, handleReconnect]);
 
   useEffect(() => {
     if (selectedRoomId === null) return;

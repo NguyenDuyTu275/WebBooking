@@ -47,6 +47,19 @@ const SupportChatWidget: React.FC = () => {
     }
   }, []);
 
+  // Messages pushed while the socket was down never arrive: reload what the widget shows.
+  const handleReconnect = useCallback(() => {
+    if (openRef.current) {
+      supportChatApi.getMine()
+        .then(history => setMessages(history.messages))
+        .catch(err => console.error('Failed to reload support chat', err));
+    } else {
+      supportChatApi.unreadCount()
+        .then(res => setUnread(res.count))
+        .catch(err => console.error('Failed to load unread chat count', err));
+    }
+  }, []);
+
   useEffect(() => {
     if (!enabled) {
       setOpen(false);
@@ -57,8 +70,8 @@ const SupportChatWidget: React.FC = () => {
     supportChatApi.unreadCount()
       .then(res => setUnread(res.count))
       .catch(err => console.error('Failed to load unread chat count', err));
-    return connectSupportChat(handleIncoming);
-  }, [enabled, handleIncoming]);
+    return connectSupportChat(handleIncoming, handleReconnect);
+  }, [enabled, handleIncoming, handleReconnect]);
 
   useEffect(() => {
     if (!open) return;
