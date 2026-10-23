@@ -9,6 +9,10 @@ services:
     region: singapore
     healthCheckPath: /
     autoDeploy: true
+    # Ten mien rieng cua backend; dia chi onrender.com van dung duoc song song.
+    # Can them ban ghi CNAME api -> <ten-dich-vu>.onrender.com o noi quan ly DNS (Mat Bao).
+    domains:
+      - api.duytu205.id.vn
     envVars:
       - key: SPRING_DATASOURCE_URL
         sync: false

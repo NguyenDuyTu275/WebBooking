@@ -13,7 +13,7 @@
 ├── frontend/                          # React app
 │   ├── src/api.ts                     # Wrapper quanh client sinh tự động (api-generated.ts)
 │   ├── src/pages/ , src/components/
-│   └── vercel.json                    # Rewrite /proxy/* → backend trên Railway
+│   └── vercel.json                    # Rewrite /proxy/* → backend api.duytu205.id.vn
 └── Dockerfile                         # Build image backend
 ```
 
@@ -68,12 +68,12 @@ npm install
 npm run dev
 ```
 
-Chat hỗ trợ khách ↔ admin dùng WebSocket (STOMP) tại `/ws`. Local: Vite proxy tự chuyển tiếp. **Trên Vercel phải đặt `VITE_WS_URL=wss://<backend>.up.railway.app/ws`**, vì rewrite của Vercel không chuyển tiếp WebSocket.
+Chat hỗ trợ khách ↔ admin dùng WebSocket (STOMP) tại `/ws`. Local: Vite proxy tự chuyển tiếp. **Trên Vercel, `VITE_WS_URL=wss://api.duytu205.id.vn/ws`** (đặt sẵn trong [`frontend/.env.production`](frontend/.env.production)), vì rewrite của Vercel không chuyển tiếp WebSocket.
 
 Frontend gọi API qua tiền tố `/proxy`:
 
 - Khi dev, Vite proxy chuyển tiếp tới `http://localhost:8080` (xem [`vite.config.ts`](frontend/vite.config.ts)).
-- Trên Vercel, [`vercel.json`](frontend/vercel.json) rewrite tới backend trên Railway.
+- Trên Vercel, [`vercel.json`](frontend/vercel.json) rewrite tới backend `https://api.duytu205.id.vn`.
 
 Sau khi đổi API ở backend, sinh lại client (backend phải đang chạy):
 
@@ -125,6 +125,7 @@ Quy tắc đầy đủ nằm trong [`SecurityConfig.java`](src/main/java/com/Nho
 
 ## Deploy
 
-- **Backend**: Railway build từ [`Dockerfile`](Dockerfile). Khai báo đủ các biến môi trường ở bảng trên trong dashboard Railway (đặc biệt `SUPABASE_URL`, `SUPABASE_KEY`, `JPA_DDL_AUTO=validate`).
+- **Backend**: Render build từ [`Dockerfile`](Dockerfile) theo [`render.yaml`](render.yaml), tên miền `https://api.duytu205.id.vn`. Khai báo đủ các biến môi trường ở bảng trên trong dashboard Render (đặc biệt `SUPABASE_URL`, `SUPABASE_KEY`, `JPA_DDL_AUTO=validate`, `GEMINI_API_KEY`).
 - **CI**: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) chạy test backend và lint/test/build frontend cho mỗi push vào `main` và mỗi pull request.
-- **Frontend**: Vercel, thư mục gốc là `frontend/`.
+- **Frontend**: Vercel, thư mục gốc là `frontend/`, tên miền `https://duytu205.id.vn`.
+- **Tên miền** `duytu205.id.vn` (DNS ở Mắt Bão): `@` và `www` trỏ về Vercel theo giá trị Vercel hiển thị, `api` là CNAME tới dịch vụ Render.

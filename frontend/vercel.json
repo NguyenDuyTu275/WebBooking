@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/proxy/:path*",
-      "destination": "https://webbooking-c5iu.onrender.com/:path*"
+      "destination": "https://api.duytu205.id.vn/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://webbooking-c5iu.onrender.com/uploads/:path*"
+      "destination": "https://api.duytu205.id.vn/uploads/:path*"
     },
     {
       "source": "/(.*)",
