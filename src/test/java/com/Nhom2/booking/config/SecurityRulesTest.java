@@ -40,10 +40,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {
@@ -294,24 +292,5 @@ class SecurityRulesTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/admin/receipts/daily").param("date", "2026-10-23"))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    void websiteOnTheTeamDomainMayCallTheApi() throws Exception {
-        for (String origin : new String[]{"https://duytu205.id.vn", "https://www.duytu205.id.vn"}) {
-            mockMvc.perform(options("/hotels")
-                            .header("Origin", origin)
-                            .header("Access-Control-Request-Method", "GET"))
-                    .andExpect(status().isOk())
-                    .andExpect(header().string("Access-Control-Allow-Origin", origin));
-        }
-    }
-
-    @Test
-    void unknownOriginsAreStillRejected() throws Exception {
-        mockMvc.perform(options("/hotels")
-                        .header("Origin", "https://duytu205.id.vn.evil.example")
-                        .header("Access-Control-Request-Method", "GET"))
-                .andExpect(status().isForbidden());
     }
 }

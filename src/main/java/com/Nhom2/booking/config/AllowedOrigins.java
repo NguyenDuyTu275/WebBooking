@@ -7,9 +7,6 @@ public final class AllowedOrigins {
 
     public static final List<String> PATTERNS = List.of(
             "http://localhost:*",
-            // Website trên tên miền của nhóm (duytu205.id.vn, www.duytu205.id.vn)
-            "https://duytu205.id.vn",
-            "https://*.duytu205.id.vn",
             "https://*.vercel.app",
             "https://*.railway.app"
     );

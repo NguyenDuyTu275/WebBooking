@@ -8,7 +8,7 @@ plugins {
 
 // Same backend the Vercel site proxies to. Override with api.baseUrl in local.properties,
 // e.g. api.baseUrl=http://10.0.2.2:8080 to reach a backend running on this PC from the emulator.
-val defaultApiBaseUrl = "https://api.duytu205.id.vn"
+val defaultApiBaseUrl = "https://ript1307-03-2026-nhom2-kthp-production.up.railway.app"
 
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
